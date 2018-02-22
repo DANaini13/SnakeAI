@@ -183,12 +183,23 @@ class GameController:
 		
 	def getSurvivalDir(self):
 		return self.snake.getSurvivalDir()
+
+	def cancelGame(self):
+		self.lock.acquire()
+		self.alive = False
+		self.lock.release()
 	
 	def _run_game(self):
 		while(True):
 			time.sleep(0.1)
 			globalLock.acquire()
 			if not self.snake.moveForword():
+				self.lock.acquire()
+				self.alive = False
+				self.lock.release()
+				globalLock.release()
+				break
+			if not self.alive:
 				globalLock.release()
 				break
 			if self.food == []:
@@ -214,18 +225,4 @@ class KeyDetector:
 		globalLock.release()
 		return key
 
-def start_human_player():
-	game = GameController(30)
-	snake_win = game.start_game()
-	keyDetector = KeyDetector(snake_win)
-	while(True):
-		if not game.getCurrentStatus:
-			return
-		key = keyDetector.getKey()
-		if key == curses.KEY_LEFT:
-			game.go_left()
-		if key == curses.KEY_RIGHT:
-			game.go_right()
-
 globalLock = threading.RLock()
-start_human_player()
