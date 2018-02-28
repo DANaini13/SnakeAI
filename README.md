@@ -6,6 +6,6 @@
 > 3. Numpy
 
 ### Run With Human Player:
-> 1. Run ```bash python humanPlayer.py``` or ```base python3 humanPlayer.py```
+> 1. Run ```python humanPlayer.py``` or ```python3 humanPlayer.py``` in the Terminal or CMD Tools
 > 2. Press Left key to turn left, Right key to turn right
 > 3. Pres ESC to exit the game
