@@ -1,7 +1,7 @@
 # Machine Learning Final Group Project
 
 ### Environment Requirements:
-> 1. Python2.7.x or Python3.x (for Deep Q Learning Robot Only) 
+> 1. Python3.x
 > 2. Cocos2d python 
 > 3. Numpy
 > 4. TensorFlow (for Deep Q Leaning Robot Only)
