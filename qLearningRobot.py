@@ -22,6 +22,7 @@ def start_learning():
         x += 1
 
 snakeViewController = SnakeViewController(window_size = 300, block_width = 4)
+snakeViewController.increasingSnake = False
 RL = QLearningTable(actions=["left", "right", "none"])
 t = threading.Thread(target = start_learning)
 t.start()

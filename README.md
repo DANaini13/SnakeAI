@@ -15,9 +15,6 @@ Since Q-Learning Algorithm is built base on the game status, this game should be
 Following instructions will make the game contains less than 16! statuses.
 (imaging this algorthm is building a state machine that describe the player logic) 
 
-> 1. Replace the ```line24``` of the ```qLearningRobot.py``` with
-   ```snakeViewController = SnakeViewController(window_size = 300, block_width = 4)```
-> 2. Set the increasingSnake to ```False``` in the ```line10``` of ```snakeViewController.py```
-> 3. Run ```python qLearningRobot.py``` or ```python3 qLearningRobot.py``` in the Terminal or CMD Tools
-> 4. Wait for training the robot (could be really slow, small changes before epoch 100000)
-> 5. Use Ctrl-C in the Terminal to stop learning
+> 1. Run ```python qLearningRobot.py``` or ```python3 qLearningRobot.py``` in the Terminal or CMD Tools
+> 2. Wait for training the robot (could be really slow, small changes before epoch 100000)
+> 3. Use Ctrl-C in the Terminal to stop learning

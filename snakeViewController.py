@@ -6,8 +6,6 @@ from snakeView import GameView
 import math
 import cocos
 
-# the snake will become longer when hitting food you this variable was setting to True.
-increasingSnake = False
 
 class SnakeModel:
 	def __init__(self, x, y, bound):
@@ -82,6 +80,10 @@ class SnakeModel:
 			return (node[0] - 1, node[1])
 
 class SnakeViewController():
+
+	increasingSnake = True
+	# the snake will become longer when hitting food you this variable was setting to True.
+
 	def __init__(self, window_size = 800, block_width = 30):
 		self.window_size = window_size
 		self.block_width = block_width
@@ -145,7 +147,7 @@ class SnakeViewController():
 					self.food = [randint(0, self.block_width - 1), randint(0, self.block_width - 1)]
 			if self.snake.hittingFood(self.food):
 				self.food = []
-				if increasingSnake:
+				if self.increasingSnake:
 					self.snake.increaseNode()
 				self.score += 1
 				#self.gameView.setScore(self.score)
