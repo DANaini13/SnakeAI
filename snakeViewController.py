@@ -88,6 +88,7 @@ class SnakeViewController():
 		self.game_over = False
 		self.food = []
 		self.score = 0
+		self.previous = 0
 
 	def enable_keyboard_detecting(self):
 		self.gameView.addKeyboardAction(self.on_key_press)
@@ -110,22 +111,30 @@ class SnakeViewController():
 	def cancelGame(self):
 		self.lock.acquire()
 		self.game_over = True
+		self.food = []
+		self.score = 0
+		self.snake = SnakeModel(self.block_width/2, self.block_width/2, (self.block_width, self.block_width))
+		self.__update_screen()
 		self.lock.release()
 
 	def getGameStatus(self):
 		return self.game_over
 
 	def __start_controller(self):
-		time.sleep(0.02)
+		self.lock.acquire()
 		self.game_over = False
+		self.lock.release()
 		index = 0
 		while not self.game_over:
 			self.__update_screen()
 			time.sleep(0.1)
 			if not self.__moveForword():
+				print("score is: " + str(self.score))
 				self.cancelGame()
 			if self.food == []:
 				self.food = [randint(1, self.block_width - 2), randint(1, self.block_width - 2)]
+				while self.snake.hittingFood(self.food):
+					self.food = [randint(1, self.block_width - 2), randint(1, self.block_width - 2)]
 			if self.snake.hittingFood(self.food):
 				self.food = []
 				self.snake.increaseNode()
@@ -155,3 +164,44 @@ class SnakeViewController():
 			self.moveRight()
 		if key == 65307:
 			self.cancelGame()
+
+	#===========================prog mark: API for Reinforcement Learning============================#
+	def reset(self):
+		self.gameView.reset()
+		self.cancelGame()
+		t = threading.Thread(target=self.__start_controller, args=())
+		t.start()	
+		time.sleep(0.03)
+		return self.__get_state()
+
+	def step(self, action):
+		if action == "left":
+			self.moveLeft()
+		if action == "right":
+			self.moveRight()
+		state = self.__get_state()
+		reward = 0
+		if self.previous < self.score:
+			reward = 1
+			self.previous = self.score
+		if self.game_over:
+			reward = -1
+		return state, reward, self.game_over
+
+	def get_status(self):
+		return self.__get_state()
+
+	def __get_state(self):
+		state = ""
+		for position in self.snake.getPositions():
+			state += str(position)
+		if self.food != []:
+			state += "-" + str(self.food)
+		return state
+	
+	def __get_distance_to_food(self):
+		position = self.snake.getPositions()[0]
+		if self.food:
+			return math.sqrt(math.pow(position[0] - self.food[0], 2) + math.pow(position[1] - self.food[1], 2))
+		else:
+			return 0

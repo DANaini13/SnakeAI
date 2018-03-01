@@ -23,6 +23,11 @@ class GameView:
     def show(self):
         cocos.director.director.run(self.main_scene)
 
+    def reset(self):
+        for i in range(self.block_num * self.block_num):
+            self.subviews[i].position = (-100, -100)
+        self.subviews[-1].position = (-100, -100)
+
     def setSubviewPositionWithID(self, id, position):
         if self.subviews[id]:
             x = self.__usuable_origin()[0] + self.stride * position[0]
@@ -98,13 +103,14 @@ class GameView:
         headView.position = (-headView.width, -headView.width)
         self.subviews[0] = headView
         self.main_scene.add(headView)
-
+        previous_scale = headView.scale
         for i in range(self.block_num * self.block_num - 1):
             subView = cocos.sprite.Sprite(
-                image = "Resources/body_01.png",
+                image = "Resources/body_02.png",
                 anchor = (0, 0)
             )
-            subView.scale = self.__usable_width() / (subView.width * self.block_num)
+            subView.scale = previous_scale * 0.98
+            previous_scale = subView.scale
             subView.position = (-subView.width, -subView.width)
             self.subviews[i + 1] = subView
             self.main_scene.add(subView)
