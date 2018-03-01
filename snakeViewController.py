@@ -6,6 +6,9 @@ from snakeView import GameView
 import math
 import cocos
 
+# the snake will become longer when hitting food you this variable was setting to True.
+increasingSnake = False
+
 class SnakeModel:
 	def __init__(self, x, y, bound):
 		self.body = []
@@ -111,6 +114,11 @@ class SnakeViewController():
 	def cancelGame(self):
 		self.lock.acquire()
 		self.game_over = True
+		self.lock.release()
+
+	def resetGame(self):
+		self.cancelGame()
+		self.lock.acquire()
 		self.food = []
 		self.score = 0
 		self.snake = SnakeModel(self.block_width/2, self.block_width/2, (self.block_width, self.block_width))
@@ -132,12 +140,13 @@ class SnakeViewController():
 				print("score is: " + str(self.score))
 				self.cancelGame()
 			if self.food == []:
-				self.food = [randint(1, self.block_width - 2), randint(1, self.block_width - 2)]
+				self.food = [randint(0, self.block_width - 1), randint(0, self.block_width - 1)]
 				while self.snake.hittingFood(self.food):
-					self.food = [randint(1, self.block_width - 2), randint(1, self.block_width - 2)]
+					self.food = [randint(0, self.block_width - 1), randint(0, self.block_width - 1)]
 			if self.snake.hittingFood(self.food):
 				self.food = []
-				self.snake.increaseNode()
+				if increasingSnake:
+					self.snake.increaseNode()
 				self.score += 1
 				#self.gameView.setScore(self.score)
 			index += 1
@@ -163,12 +172,12 @@ class SnakeViewController():
 		if key == 65363:
 			self.moveRight()
 		if key == 65307:
-			self.cancelGame()
+			self.resetGame()
 
 	#===========================prog mark: API for Reinforcement Learning============================#
 	def reset(self):
 		self.gameView.reset()
-		self.cancelGame()
+		self.resetGame()
 		t = threading.Thread(target=self.__start_controller, args=())
 		t.start()	
 		time.sleep(0.03)
@@ -182,7 +191,7 @@ class SnakeViewController():
 		state = self.__get_state()
 		reward = 0
 		if self.previous < self.score:
-			reward = 1
+			reward = 1/(self.block_width * self.block_width)
 			self.previous = self.score
 		if self.game_over:
 			reward = -1

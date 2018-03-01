@@ -1,5 +1,6 @@
 import cocos
 import threading
+import math
 
 class KeyDetectLayer(cocos.layer.Layer):
 
@@ -104,12 +105,15 @@ class GameView:
         self.subviews[0] = headView
         self.main_scene.add(headView)
         previous_scale = headView.scale
+        final_target = 0.2 * headView.scale
+        n = self.block_num * self.block_num 
+        single_refect = math.pow(final_target/headView.scale, 1/(n-1))
         for i in range(self.block_num * self.block_num - 1):
             subView = cocos.sprite.Sprite(
                 image = "Resources/body_02.png",
                 anchor = (0, 0)
             )
-            subView.scale = previous_scale * 0.98
+            subView.scale = previous_scale * single_refect
             previous_scale = subView.scale
             subView.position = (-subView.width, -subView.width)
             self.subviews[i + 1] = subView

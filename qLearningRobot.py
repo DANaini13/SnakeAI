@@ -6,7 +6,7 @@ import time
 def start_learning():
     x = 0
     while True:
-        time.sleep(0.001)   #waiting for the game start
+        time.sleep(0.2)   #waiting for the game start
         print("epoch " + str(x), end=" ")
         state = snakeViewController.reset()
         if x % 100 == 0:
@@ -21,7 +21,7 @@ def start_learning():
                 break
         x += 1
 
-snakeViewController = SnakeViewController(window_size = 300, block_width = 8)
+snakeViewController = SnakeViewController(window_size = 300, block_width = 4)
 RL = QLearningTable(actions=["left", "right", "none"])
 t = threading.Thread(target = start_learning)
 t.start()
