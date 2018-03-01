@@ -1,4 +1,6 @@
 # Machine Learning Final Group Project
+Part of the concept is referencing https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/
+                                   ===============================================================================
 
 ### Environment Requirements:
 > 1. Python3.x
