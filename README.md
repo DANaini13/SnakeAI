@@ -3,7 +3,7 @@
 ### Environment Requirements:
 > 1. Python3.x
 > 2. Cocos2d python 
-> 3. Numpy
+> 3. Numpy and Pandas (for Robots)
 > 4. TensorFlow (for Deep Q Leaning Robot Only)
 
 ### Run With Human Player:
