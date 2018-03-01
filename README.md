@@ -1,5 +1,5 @@
 # Machine Learning Final Group Project
-Part of the concept is referencing:
+Part of the concepts were referenced from:
 > 1. https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/
 > 2. https://zhuanlan.zhihu.com/p/21262246
 
