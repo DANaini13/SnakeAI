@@ -66,8 +66,8 @@ class GameView:
         self.lock = threading.RLock()
         self.scoreView = None
         self.director.init(
-	        width = self.screen_width,
-	        height = self.screen_height,
+	        width = int(self.screen_width),
+	        height = int(self.screen_height),
 	        caption="Snake Game",
 	        fullscreen=False,
             autoscale=False
