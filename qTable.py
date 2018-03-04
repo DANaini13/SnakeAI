@@ -14,7 +14,7 @@ class QLearningTable:
         self.check_state_exist(observation)
         if np.random.uniform() < self.epsilon:
             state_action = self.q_table.loc[observation, :]
-            state_action = state_action.reindex(np.random.permutation(state_action.index))     # some actions have same value
+            state_action = state_action.reindex(np.random.permutation(state_action.index))
             action = state_action.idxmax()
         else:
             action = np.random.choice(self.actions)
@@ -23,11 +23,11 @@ class QLearningTable:
     def learn(self, s, a, r, s_):
         self.check_state_exist(s_)
         q_predict = self.q_table.loc[s, a]
-        if s_ != 'terminal':
-            q_target = r + self.gamma * self.q_table.loc[s_, :].max()  # next state is not terminal
+        if s_ != 'Target':
+            q_target = r + self.gamma * self.q_table.loc[s_, :].max()
         else:
-            q_target = r  # next state is terminal
-        self.q_table.loc[s, a] += self.lr * (q_target - q_predict)  # update
+            q_target = r 
+        self.q_table.loc[s, a] += self.lr * (q_target - q_predict)
 
     def check_state_exist(self, state):
         if state not in self.q_table.index:
