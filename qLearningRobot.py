@@ -12,7 +12,7 @@ block_width = 4                 # The width of the game screen (4 means this pro
 
 screen_witth = 300              # Decide the screen width of the snake game (300 mean this program will generate a snake game with 300px x 300px window)
 increasingSnake = False         # Set this to True if you want the snake grows after hitting food (Recommand False for q learning)
-show_graph = False              # Set this to Ture if you want show the graph of the training history 
+show_graph = True               # Set this to Ture if you want show the graph of the training history 
                                 # (Press "p" to update the graph) (Only works when the OS is focusing on the Snake game window)
 
 fixed_food_pos = []             # Set this to a list of two numbers or empty. ([2, 2] means the snake game will only generate the food at position (2, 2))
