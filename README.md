@@ -24,7 +24,7 @@ Following instructions will make the game contains less or equal than 256 status
 > 2. Wait for training the robot (could be really slow, small changes before getting most of the statuses in Q table)
 > 3. Press double ```Ctrl-C``` in the Terminal to stop learning
 > 4. Use p to update the matplot graph (only show the graph history for the last running)
-> 5. Delete the ```q_table.csv``` if you want to train start over again
+> 5. Delete the ```q_table.csv``` if you want to train start over again or changed the block width
 
 ### Run With Deep Q Learning Robot:
 To be continued...
