@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 class QLearningTable:
-    def __init__(self, actions, learning_rate=0.01, reward_decay=0.9, e_greedy=0.9, max_status = 256):
+    def __init__(self, actions, learning_rate=0.01, reward_decay=0.9, e_greedy=0.5, max_status = 256):
         self.actions = actions  # a list
         self.lr = learning_rate
         self.gamma = reward_decay
@@ -18,7 +18,9 @@ class QLearningTable:
 
     def choose_action(self, observation):
         self.check_state_exist(observation)
-        if np.random.uniform() < self.epsilon and len(self.q_table.index) >= self.max_status:
+        if len(self.q_table.index) >= self.max_status/5 * 4:
+            self.epsilon = 0.9
+        if np.random.uniform() < self.epsilon:
             state_action = self.q_table.loc[observation, :]
             state_action = state_action.reindex(np.random.permutation(state_action.index))
             action = state_action.idxmax()
