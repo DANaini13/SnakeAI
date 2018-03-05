@@ -86,6 +86,10 @@ class SnakeViewController():
 	fixedFoodPosition = []
 	# set it to a list that contains x and y if you want the food position be fixed.
 
+	scores = []
+
+	updatePlotFunction = None
+
 	def __init__(self, window_size = 800, block_width = 30, snakeInitLength = 3):
 		self.window_size = window_size
 		self.block_width = block_width
@@ -98,8 +102,11 @@ class SnakeViewController():
 		self.previous = 0
 		self.snakeInitLength = snakeInitLength
 
-	def enable_keyboard_detecting(self):
-		self.gameView.addKeyboardAction(self.on_key_press)
+	def enable_keyboard_detecting(self, action = None):
+		if action == None:
+			self.gameView.addKeyboardAction(self.on_key_press)
+		else:
+			self.gameView.addKeyboardAction(action)
 
 	def start_game(self):
 		t = threading.Thread(target=self.__start_controller, args=())
@@ -211,6 +218,7 @@ class SnakeViewController():
 			state = "Dead"
 			reward = -1
 			print("score is: " + str(self.score))
+			self.scores.append(self.score)
 			return self.__get_state(), reward, self.game_over
 		self.__refresh_food()
 		if self.snake.hittingFood(self.food):	
