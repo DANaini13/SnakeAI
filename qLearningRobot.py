@@ -20,9 +20,10 @@ def start_learning():
         ephic += 1
 
 
-env = SnakeViewController(window_size = 300, block_width = 4)
+block_width = 4
+env = SnakeViewController(window_size = 300, block_width = block_width)
 env.increasingSnake = False
-RL = QLearningTable(actions=["left", "right", "none"])
+RL = QLearningTable(actions=["left", "right", "none"], max_status = block_width * (block_width - 1))
 t = threading.Thread(target = start_learning)
 t.start()
 env.showGame()

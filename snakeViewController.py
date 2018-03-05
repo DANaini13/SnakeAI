@@ -218,7 +218,7 @@ class SnakeViewController():
 			if self.increasingSnake:
 				self.snake.increaseNode()
 			self.score += 1
-			reward = 1
+			reward = self.score / (self.block_width * self.block_width)
 		state = self.__get_state()
 		return state, reward, self.game_over
 
@@ -235,7 +235,7 @@ class SnakeViewController():
 		if self.food != []:
 			state += "-" + str(self.food)
 		else:
-			state = "seed"
+			state = "Target"
 		if self.game_over:
 			state = "dead"
 		return state
