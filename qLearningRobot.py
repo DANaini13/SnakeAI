@@ -5,18 +5,20 @@ import time
 import matplotlib.pyplot as plt
 
 ### Program Args ###
-block_width = 8                 # The width of the game screen (4 means this program will generate a 4x4 snake game) 
+block_width = 4                 # The width of the game screen (4 means this program will generate a 4x4 snake game) 
                                 # Recommand 4
 
-screen_witth = 600              # Decide the screen width of the snake game (300 mean this program will generate a snake game with 300px x 300px window)
+screen_witth = 300              # Decide the screen width of the snake game (300 mean this program will generate a snake game with 300px x 300px window)
 increasingSnake = True          # Set this to True if you want the snake grows after hitting food (Recommand False for q learning)
-snake_init_length = 1
+snake_init_length = 10
 show_graph = True               # Set this to Ture if you want show the graph of the training history 
                                 # (Press "p" to update the graph) (Only works when the OS is focusing on the Snake game window)
 
 fixed_food_pos = []             # Set this to a list of two numbers or empty. ([2, 2] means the snake game will only generate the food at position (2, 2))
                                 # Recommand to set to not empty if you want to train less than 100 times
-high_speed_training = False     # Set it to ture if you want to speed up the training. This will stop updating the game view
+high_speed_training = True      # Set it to ture if you want to speed up the training. This will stop updating the game view
+historyFileName = "history4x4.txt"
+qTableFileName = "q_table4x4.csv"
 
 def start_learning():
     time.sleep(1)
@@ -73,7 +75,7 @@ def save_to_file():
             print(str(score), file=f)
 
 RL = QLearningTable(actions=["left", "right", "none"], max_status = block_width * (block_width - 1))
-env = SnakeViewController(window_size = screen_witth, block_width = block_width, snakeInitLength = 1)
+env = SnakeViewController(window_size = screen_witth, block_width = block_width, snakeInitLength = snake_init_length)
 if not increasingSnake:
     env.increasingSnake = False
 env.fixedFoodPosition = fixed_food_pos
