@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 class QLearningTable:
-    def __init__(self, actions, learning_rate=0.01, reward_decay=0.9, e_greedy=0.5, max_status = 256):
+    def __init__(self, actions, learning_rate=0.01, reward_decay=0.3, e_greedy=0.9, max_status = 256):
         self.actions = actions  # a list
         self.lr = learning_rate
         self.gamma = reward_decay
@@ -18,8 +18,6 @@ class QLearningTable:
 
     def choose_action(self, observation):
         self.check_state_exist(observation)
-        if len(self.q_table.index) >= self.max_status/5 * 4:
-            self.epsilon = 0.9
         if np.random.uniform() < self.epsilon:
             state_action = self.q_table.loc[observation, :]
             state_action = state_action.reindex(np.random.permutation(state_action.index))
@@ -36,7 +34,6 @@ class QLearningTable:
         else:
             q_target = r 
         self.q_table.loc[s, a] += self.lr * (q_target - q_predict)
-        self.q_table.to_csv("q_table.csv")
 
     def check_state_exist(self, state):
         if state not in self.q_table.index:
@@ -47,6 +44,9 @@ class QLearningTable:
                     name=state,
                 )
             )
+    
+    def save_to_file(self):
+        self.q_table.to_csv("q_table.csv")
 
     def print_table(self):
         print(len(self.q_table))

@@ -30,9 +30,9 @@ class SnakeModel:
 		self.previous = self.body
 		temp = self.__moveNode(self.body[0])
 		flag = True
-		if not self.__checkBounds(temp):
+		if not self.checkBounds(temp):
 			flag = False
-		if not self.__checkSelf(temp):
+		if not self.checkSelf(temp):
 			flag = False
 		head = self.body[0]
 		self.body[0] = temp
@@ -59,11 +59,15 @@ class SnakeModel:
 			self.body[index + 1] = head 
 			head = temp
 
-	def __checkBounds(self, point):
+	def checkBounds(self, point):
 		return point[0] >= 0 and point[0] < self.bound[0] and point[1] >= 0 and point[1] < self.bound[1]
 
-	def __checkSelf(self, point):
+	def checkSelf(self, point):
+		first = True
 		for node in self.body:
+			if first:
+				first = False
+				continue
 			if node[0] == point[0] and node[1] == point[1]:
 				return False
 		return True
@@ -85,6 +89,8 @@ class SnakeViewController():
 
 	fixedFoodPosition = []
 	# set it to a list that contains x and y if you want the food position be fixed.
+
+	highSpeedTrainint = False
 
 	scores = []
 
@@ -207,7 +213,8 @@ class SnakeViewController():
 		return self.__get_state()
 
 	def step(self, action):
-		time.sleep(0.1)
+		if not self.highSpeedTrainint:
+			time.sleep(0.3)
 		reward = 0
 		if action == "left":
 			self.moveLeft()
@@ -226,7 +233,7 @@ class SnakeViewController():
 			if self.increasingSnake:
 				self.snake.increaseNode()
 			self.score += 1
-			reward = self.score / (self.block_width * self.block_width)
+			reward = self.score
 		state = self.__get_state()
 		return state, reward, self.game_over
 
@@ -235,16 +242,122 @@ class SnakeViewController():
 
 	def __get_state(self):
 		state = ""
-		if self.increasingSnake:
-			for position in self.snake.getPositions():
-				state += str(position)
-		else:
-			state += str(self.snake.getPositions()[0])
-		if self.food != []:
-			state += "-" + str(self.food)
-		else:
-			state = "Target"
 		if self.game_over:
 			state = "dead"
+			return state
+		#food square distance
+		headPosition = self.snake.getPositions()[0]
+		if self.food == []:
+			state += "noFood"
+		else:
+			squareDistance = self.__getSquareDistance(headPosition, self.food)
+			state += str(squareDistance)
+			#food direction
+			if squareDistance != 0:
+				state += self.__getFoodDirection(headPosition, self.food)
+		#up dead distance
+		temp = headPosition
+		count = 0
+		while self.snake.checkBounds(temp) and self.snake.checkSelf(temp):
+			temp = (temp[0], temp[1] - 1)
+			count += 1
+		state += str(count)
+		#right dead distance
+		temp = headPosition
+		count = 0
+		while self.snake.checkBounds(temp) and self.snake.checkSelf(temp):
+			temp = (temp[0] + 1, temp[1])
+			count += 1
+		state += str(count)
+		#down dead distance
+		temp = headPosition
+		count = 0
+		while self.snake.checkBounds(temp) and self.snake.checkSelf(temp):
+			temp = (temp[0], temp[1] + 1)
+			count += 1
+		state += str(count)
+		#left dead distance
+		temp = headPosition
+		count = 0
+		while self.snake.checkBounds(temp) and self.snake.checkSelf(temp):
+			temp = (temp[0] - 1, temp[1])
+			count += 1
+		state += str(count)
+		#leftup dead distance
+		temp = headPosition
+		count = 0
+		while self.snake.checkBounds(temp) and self.snake.checkSelf(temp):
+			temp = (temp[0] - 1, temp[1] - 1)
+			count += 1
+		state += str(count)
+		#rightup dead distance
+		temp = headPosition
+		count = 0
+		while self.snake.checkBounds(temp) and self.snake.checkSelf(temp):
+			temp = (temp[0] + 1, temp[1] - 1)
+			count += 1
+		state += str(count)
+		#leftdown dead distance
+		temp = headPosition
+		count = 0
+		while self.snake.checkBounds(temp) and self.snake.checkSelf(temp):
+			temp = (temp[0] - 1, temp[1] + 1)
+			count += 1
+		state += str(count)
+		#rightdown dead distance
+		temp = headPosition
+		count = 0
+		while self.snake.checkBounds(temp) and self.snake.checkSelf(temp):
+			temp = (temp[0] + 1, temp[1] + 1)
+			count += 1
+		state += str(count)
+		#up and down nodes
+		up = 0
+		down = 0
+		left = 0
+		right = 0
+		upleft = 0
+		upright = 0
+		downleft = 0
+		downright = 0
+		for position in self.snake.getPositions():
+			if position[0] == headPosition[0] and position[1] < headPosition[1]:
+				up += 1
+			if position[0] == headPosition[0] and position[1] > headPosition[1]:
+				down += 1
+			if position[0] > headPosition[0] and position[1] == headPosition[1]:
+				right += 1
+			if position[0] < headPosition[0] and position[1] == headPosition[1]:
+				left += 1
+			if position[0] < headPosition[0] and position[1] < headPosition[1]:
+				upleft += 1
+			if position[0] < headPosition[0] and position[1] > headPosition[1]:
+				downleft += 1
+			if position[0] > headPosition[0] and position[1] < headPosition[1]:
+				upleft += 1
+			if position[0] > headPosition[0] and position[1] > headPosition[1]:
+				downleft += 1
+		state += str(up) + str(down) + str(left) + str(right) + str(upleft) + str(upright) + str(downleft) + str(downright)		
 		return state
-	
+
+
+	def __getSquareDistance(self, point1, point2):
+		return math.pow(point1[0] - point2[0], 2) + math.pow(point1[1] - point2[1], 2)
+
+	def __getFoodDirection(self, headPosition, food):
+		if food[0] == headPosition[0] and food[1] < headPosition[1]:
+			return "up"
+		if food[0] == headPosition[0] and food[1] > headPosition[1]:
+			return "down"
+		if food[0] > headPosition[0] and food[1] == headPosition[1]:
+			return "right"
+		if food[0] < headPosition[0] and food[1] == headPosition[1]:
+			return "left"
+		if food[0] < headPosition[0] and food[1] < headPosition[1]:
+			return "upleft"
+		if food[0] < headPosition[0] and food[1] > headPosition[1]:
+			return "downleft"
+		if food[0] > headPosition[0] and food[1] < headPosition[1]:
+			return "upright"
+		if food[0] > headPosition[0] and food[1] > headPosition[1]:
+			return "downright"
