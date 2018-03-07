@@ -108,7 +108,7 @@ class GameView:
         final_target = 0.2 * headView.scale
         n = self.block_num * self.block_num 
         single_refect = math.pow(final_target/headView.scale, 1/(n-1))
-        for i in range(self.block_num * self.block_num - 1):
+        for i in range(self.block_num * self.block_num):
             subView = cocos.sprite.Sprite(
                 image = "Resources/body_02.png",
                 anchor = (0, 0)

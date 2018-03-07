@@ -154,7 +154,7 @@ class SnakeViewController():
 		index = 0
 		while not self.game_over:
 			self.__update_screen()
-			time.sleep(0.1)
+			time.sleep(0.5)
 			if not self.__moveForword():
 				print("score is: " + str(self.score))
 				self.cancelGame()
@@ -194,8 +194,10 @@ class SnakeViewController():
 		if self.food == []:
 			if self.fixedFoodPosition == []:
 				self.food = [randint(0, self.block_width - 1), randint(0, self.block_width - 1)]
-				while self.snake.hittingFood(self.food):
+				times = 0
+				while self.snake.hittingFood(self.food) and len(self.snake.getPositions()) < (self.block_width * self.block_width):
 					self.food = [randint(0, self.block_width - 1), randint(0, self.block_width - 1)]
+					times += 1
 			else:
 				self.food = self.fixedFoodPosition
 
@@ -244,6 +246,9 @@ class SnakeViewController():
 		state = ""
 		if self.game_over:
 			state = "dead"
+			return state
+		if len(self.snake.getPositions()) >= self.block_width * self.block_width:
+			state = "Target"
 			return state
 		#food square distance
 		headPosition = self.snake.getPositions()[0]

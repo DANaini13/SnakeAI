@@ -10,13 +10,14 @@ block_width = 4                 # The width of the game screen (4 means this pro
 
 screen_witth = 300              # Decide the screen width of the snake game (300 mean this program will generate a snake game with 300px x 300px window)
 increasingSnake = True          # Set this to True if you want the snake grows after hitting food (Recommand False for q learning)
-snake_init_length = 10
+snake_init_length = 1
 show_graph = True               # Set this to Ture if you want show the graph of the training history 
                                 # (Press "p" to update the graph) (Only works when the OS is focusing on the Snake game window)
 
 fixed_food_pos = []             # Set this to a list of two numbers or empty. ([2, 2] means the snake game will only generate the food at position (2, 2))
                                 # Recommand to set to not empty if you want to train less than 100 times
 high_speed_training = True      # Set it to ture if you want to speed up the training. This will stop updating the game view
+trainMode = True               
 historyFileName = "history4x4.txt"
 qTableFileName = "q_table4x4.csv"
 
@@ -24,8 +25,9 @@ def start_learning():
     time.sleep(1)
     ephic = len(env.scores)
     while True:
-        if ephic % 2000 == 0:
-            RL.save_to_file()
+        if ephic % 200 == 0:
+            if trainMode:
+                RL.save_to_file()
             save_to_file()
         print("ephic " + str(ephic) + " ", end="")
         observation = env.reset()
@@ -34,7 +36,8 @@ def start_learning():
                 env.render()
             action = RL.choose_action(str(observation))
             observation_, reward, done = env.step(action)
-            RL.learn(str(observation), action, reward, str(observation_))
+            if trainMode:
+                RL.learn(str(observation), action, reward, str(observation_))
             observation = observation_
             if done:
                 break
@@ -66,15 +69,16 @@ def update_plot(key):
         ax.plot(range(len(avgScores)), avgScores, "k-", lw=1)
         plt.pause(0.01)
     if key == 115:
-        RL.save_to_file()
+        if trainMode:
+            RL.save_to_file()
         save_to_file()
 
 def save_to_file():
-    with open("history.txt", "wt") as f:
+    with open(historyFileName, "wt") as f:
         for score in env.scores:
             print(str(score), file=f)
 
-RL = QLearningTable(actions=["left", "right", "none"], max_status = block_width * (block_width - 1))
+RL = QLearningTable(actions=["left", "right", "none"], max_status = block_width * (block_width - 1), fileName = qTableFileName)
 env = SnakeViewController(window_size = screen_witth, block_width = block_width, snakeInitLength = snake_init_length)
 if not increasingSnake:
     env.increasingSnake = False
@@ -88,7 +92,7 @@ if show_graph:
 if high_speed_training:
     env.highSpeedTrainint = True
 env.scores = []
-with open("history.txt", "rt") as f:
+with open(historyFileName, "rt") as f:
     for line in f:
         env.scores.append(int(line))
         ephic = len(env.scores)

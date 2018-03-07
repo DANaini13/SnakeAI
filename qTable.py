@@ -4,16 +4,17 @@ from pathlib import Path
 
 
 class QLearningTable:
-    def __init__(self, actions, learning_rate=0.01, reward_decay=0.3, e_greedy=0.9, max_status = 256):
+    def __init__(self, actions, learning_rate=0.01, reward_decay=0.3, e_greedy=0.999, max_status = 256, fileName = "q_table.csv"):
         self.actions = actions  # a list
         self.lr = learning_rate
         self.gamma = reward_decay
         self.epsilon = e_greedy
         self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float)
         self.max_status = max_status
-        csvfile = Path("q_table.csv")
+        self.fileName = fileName
+        csvfile = Path(fileName)
         if csvfile.exists():
-            self.q_table = pd.read_csv("q_table.csv")
+            self.q_table = pd.read_csv(fileName)
             self.q_table = self.q_table.set_index("Unnamed: 0")
 
     def choose_action(self, observation):
@@ -46,7 +47,7 @@ class QLearningTable:
             )
     
     def save_to_file(self):
-        self.q_table.to_csv("q_table.csv")
+        self.q_table.to_csv(self.fileName)
 
     def print_table(self):
         print(len(self.q_table))
