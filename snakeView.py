@@ -105,7 +105,7 @@ class GameView:
         self.subviews[0] = headView
         self.main_scene.add(headView)
         previous_scale = headView.scale
-        final_target = 0.2 * headView.scale
+        final_target = 0.5 * headView.scale
         n = self.block_num * self.block_num 
         single_refect = math.pow(final_target/headView.scale, 1/(n-1))
         for i in range(self.block_num * self.block_num):

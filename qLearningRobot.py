@@ -16,10 +16,10 @@ show_graph = True               # Set this to Ture if you want show the graph of
 
 fixed_food_pos = []             # Set this to a list of two numbers or empty. ([2, 2] means the snake game will only generate the food at position (2, 2))
                                 # Recommand to set to not empty if you want to train less than 100 times
-high_speed_training = True      # Set it to ture if you want to speed up the training. This will stop updating the game view
+high_speed_training = False     # Set it to ture if you want to speed up the training. This will stop updating the game view
 trainMode = True               
-historyFileName = "history4x4.txt"
-qTableFileName = "q_table4x4.csv"
+historyFileName = "history4x4_hardPun.txt"
+qTableFileName = "q_table4x4_hardPun.csv"
 
 def start_learning():
     time.sleep(1)
@@ -33,7 +33,7 @@ def start_learning():
         observation = env.reset()
         while True:
             if not high_speed_training:
-                env.render()
+               env.render()
             action = RL.choose_action(str(observation))
             observation_, reward, done = env.step(action)
             if trainMode:

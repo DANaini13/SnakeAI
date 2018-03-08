@@ -216,7 +216,7 @@ class SnakeViewController():
 
 	def step(self, action):
 		if not self.highSpeedTrainint:
-			time.sleep(0.3)
+			time.sleep(0.15)
 		reward = 0
 		if action == "left":
 			self.moveLeft()
@@ -235,7 +235,7 @@ class SnakeViewController():
 			if self.increasingSnake:
 				self.snake.increaseNode()
 			self.score += 1
-			reward = self.score
+			reward = self.score / (self.block_width * self.block_width)
 		state = self.__get_state()
 		return state, reward, self.game_over
 
